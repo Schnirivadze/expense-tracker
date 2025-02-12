@@ -20,7 +20,6 @@ Chart.register(
 	selector: 'app-dashboard',
 	imports: [CurrencyPipe, NgClass, DatePipe],
 	templateUrl: './dashboard.component.html',
-	styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
 	transactionsService = inject(TransactionsService)
@@ -31,99 +30,96 @@ export class DashboardComponent {
 
 	ngOnInit() {
 		this.transactionsService.getAllTransactions().subscribe({
-		  next: (data) => {
-			const sortedTransactions = data.sort((a: Transaction, b: Transaction) =>
-			  new Date(b.date).getTime() - new Date(a.date).getTime()
-			);
-			this.transactions.set(sortedTransactions);
-			console.log('Sorted Transactions:', this.transactions());
-			
-			const now = new Date();
-			
-			const dailyBalance: number[] = [];
-			const labels: string[] = [];
-	  
-			let cumulativeBalance = 0;
-			for (let day = 1; day <= now.getDate(); day++) {
-			  const currentDate = new Date(now.getFullYear(), now.getMonth(), day);
-			  
-			  const transactionsForTheDay = sortedTransactions.filter((transaction: Transaction) => {
-				const transactionDate = new Date(transaction.date);
-				return transactionDate.getDate() === day && transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear();
-			  });
-			  
-			  transactionsForTheDay.forEach((transaction: Transaction) => {
-				cumulativeBalance += transaction.amount;
-			  });
-	  
-			  dailyBalance.push(cumulativeBalance);
-			  labels.push(currentDate.toLocaleDateString('en-GB', { day: 'numeric' }));
-			}
-	  
-			const ctx = (document.getElementById('myChart') as HTMLCanvasElement).getContext('2d');
-			if (ctx) {
-			  const chartData = {
-				labels: labels, 
-				datasets: [{
-				  label: 'Balance',
-				  data: dailyBalance, 
-				  borderColor: '#a6adbb',
-				  fill: false,
-				  stepped:true,
-				  pointRadius: 0,
-				}]
-			  };
-	  
-			  new Chart(ctx, {
-				type: 'line',
-				data: chartData,
-				options: {
-					layout: {
-						padding: 2
-					},
-					plugins: {
-						legend: {
-							display: false,
-						},
-						tooltip: {
-							enabled: false,
-						}
-					},
-					scales: {
-						x: {
-							grid: {
-								display: false,
+			next: (data) => {
+				const sortedTransactions = data.sort((a: Transaction, b: Transaction) =>
+					new Date(b.date).getTime() - new Date(a.date).getTime()
+				);
+				this.transactions.set(sortedTransactions);
+				console.log('Sorted Transactions:', this.transactions());
+
+				const now = new Date();
+
+				const dailyBalance: number[] = [];
+				const labels: string[] = [];
+
+				let cumulativeBalance = 0;
+				for (let day = 1; day <= now.getDate(); day++) {
+					const transactionsForTheDay = sortedTransactions.filter((transaction: Transaction) => {
+						const transactionDate = new Date(transaction.date);
+						return transactionDate.getDate() === day && transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear();
+					});
+
+					transactionsForTheDay.forEach((transaction: Transaction) => {
+						cumulativeBalance += transaction.amount;
+					});
+
+					dailyBalance.push(cumulativeBalance);
+				}
+				for (let i = 0; i < 30; i++) { labels.push("") }
+				const ctx = (document.getElementById('myChart') as HTMLCanvasElement).getContext('2d');
+				if (ctx) {
+					const chartData = {
+						labels: labels,
+						datasets: [{
+							label: 'Balance',
+							data: dailyBalance,
+							borderColor: '#a6adbb',
+							fill: false,
+							stepped: true,
+							pointRadius: 0,
+						}]
+					};
+
+					new Chart(ctx, {
+						type: 'line',
+						data: chartData,
+						options: {
+							layout: {
+								padding: 2
 							},
-							ticks: {
-								display: false,
-							},
-							border:{
-								width:0
-							}
-						},
-						y: {
-							beginAtZero: true,
-							min: 0,
-							grid: {
-								display: false,
-							}, ticks: {
-								font: {
-									family: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-									weight:'bolder'
+							plugins: {
+								legend: {
+									display: false,
+								},
+								tooltip: {
+									enabled: false,
 								}
 							},
-							border:{
-								width:0
+							scales: {
+								x: {
+									grid: {
+										display: false,
+									},
+									ticks: {
+										display: false,
+									},
+									border: {
+										width: 0
+									}
+								},
+								y: {
+									beginAtZero: true,
+									min: 0,
+									grid: {
+										display: false,
+									}, ticks: {
+										font: {
+											family: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+											weight: 'bolder'
+										}
+									},
+									border: {
+										width: 0
+									}
+								}
 							}
 						}
-					}
+					});
 				}
-			  });
-			}
-		  },
-		  error: (error) => console.error('Error fetching transactions:', error),
-		  complete: () => console.info('Completed fetching transactions:')
+			},
+			error: (error) => console.error('Error fetching transactions:', error),
+			complete: () => console.info('Completed fetching transactions:')
 		});
-	  }
-	  
+	}
+
 }
