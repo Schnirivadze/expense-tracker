@@ -12,10 +12,4 @@ export class HeaderComponent {
 	toggleTheme(): void {
 		this.themeService.setTheme((this.themeService.getTheme() == "light") ? "dark" : "light");
 	}
-	closeDropdown(): void {
-		const details = document.querySelector('details[open]');
-		if (details) {
-			details.removeAttribute('open');
-		}
-	}
 }
