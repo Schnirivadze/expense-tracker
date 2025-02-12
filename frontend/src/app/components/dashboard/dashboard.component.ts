@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TransactionsService } from '../../services/transactions.service';
 import { Transaction } from '../../../model/transaction.type';
 import { Chart, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, ArcElement, LineController } from 'chart.js';
+import { HeaderComponent } from '../header/header.component';
 
 Chart.register(
 	CategoryScale,
@@ -18,7 +19,7 @@ Chart.register(
 
 @Component({
 	selector: 'app-dashboard',
-	imports: [CurrencyPipe, NgClass, DatePipe],
+	imports: [CurrencyPipe, NgClass, DatePipe,HeaderComponent],
 	templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {

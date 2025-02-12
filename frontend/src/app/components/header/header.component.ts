@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -11,4 +11,6 @@ export class HeaderComponent {
 	toggleTheme(): void {
 		this.themeService.setTheme((this.themeService.getTheme() == "light") ? "dark" : "light");
 	}
+	showAddButton = input<boolean>(true);
+	title = input<string>("Header");
 }

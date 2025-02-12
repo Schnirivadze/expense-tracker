@@ -1,15 +1,17 @@
 <div class="navbar bg-base-300 menu menu-horizontal">
 
 	<div class="flex-1">
-		<a class="btn text-xl bg-transparent cursor-default">Dashboard</a>
+		<a class="btn text-xl bg-transparent cursor-default border-0 shadow-none hover:bg-base-300">{{title()}}</a>
 	</div>
 
 	<div class="flex justify-end flex-1 px-2 ">
+		@if(showAddButton()){
 		<button class="btn btn-square btn-ghost mr-4">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12" />
 			</svg>
 		</button>
+		}
 		<label class="swap swap-rotate btn-square btn-ghost btn">
 			<input type="checkbox" class="theme-controller" value="synthwave" (click)="toggleTheme()" />
 
