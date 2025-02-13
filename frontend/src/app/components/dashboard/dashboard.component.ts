@@ -36,7 +36,6 @@ export class DashboardComponent {
 					new Date(b.date).getTime() - new Date(a.date).getTime()
 				);
 				this.transactions.set(sortedTransactions);
-				console.log('Sorted Transactions:', this.transactions());
 
 				const now = new Date();
 
@@ -45,9 +44,11 @@ export class DashboardComponent {
 
 				let cumulativeBalance = 0;
 				for (let day = 1; day <= now.getDate(); day++) {
+					cumulativeBalance=0;
+					const graphDayDate=new Date(`${now.getFullYear()}-${now.getMonth()+1}-${day}`)
 					const transactionsForTheDay = sortedTransactions.filter((transaction: Transaction) => {
 						const transactionDate = new Date(transaction.date);
-						return transactionDate.getDate() === day && transactionDate.getMonth() === now.getMonth() && transactionDate.getFullYear() === now.getFullYear();
+						return transactionDate.getTime() < graphDayDate.getTime()
 					});
 
 					transactionsForTheDay.forEach((transaction: Transaction) => {
@@ -56,7 +57,9 @@ export class DashboardComponent {
 
 					dailyBalance.push(cumulativeBalance);
 				}
-				for (let i = 0; i < 30; i++) { labels.push("") }
+				var daysInCurrenMonth=new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+				for (let i = 0; i < daysInCurrenMonth; i++) { labels.push("") }
+
 				const ctx = (document.getElementById('myChart') as HTMLCanvasElement).getContext('2d');
 				if (ctx) {
 					const chartData = {
@@ -119,7 +122,7 @@ export class DashboardComponent {
 				}
 			},
 			error: (error) => console.error('Error fetching transactions:', error),
-			complete: () => console.info('Completed fetching transactions:')
+			complete: () => console.info('Completed fetching transactions')
 		});
 	}
 
