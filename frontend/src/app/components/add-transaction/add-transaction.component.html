@@ -1,0 +1,50 @@
+<app-header [title]="'Add transaction'" [showAddButton]="false" />
+<div class="stats shadow m-3 ml-14 w-80 max-w-[calc(100%-1.5rem)] mt-48">
+	<div class="stat bg-base-300 p-7 font-bold text-center">
+		<div class="stat-title">TOTAL BALANCE</div>
+		<div class="stat-value font-mono text-2xl transition-all duration-500" [ngClass]="amount()>0  ? 'text-success' : amount()<0?'text-error':''">
+			{{ amountDisplayed()| currency: "UAH" : 'symbol-narrow'}}
+		</div>
+	</div>
+</div>
+<div class="card-body items-center text-center">
+	<label class="input input-bordered flex items-center gap-2 w-80" [ngClass]="isAmountValid()?'':'input-error'">
+		Amount
+		<input type="text" class="grow" [(ngModel)]="amount" value="-0" (input)="validateAmount()"/>
+	</label>
+	<label class="input input-bordered flex items-center gap-2 w-80"[ngClass]="isDescriptionValid()?'':'input-error'">
+		Description
+		<input type="text" class="grow" [(ngModel)]="description" (input)="validateDescription()"/>
+	</label>
+	<select class="select select-bordered max-w-xs w-80" [(ngModel)]="category" [ngClass]="isCategoryValid()?'':'select-error'" (change)="validateCategory()">
+		<option disabled selected>Category</option>
+		@if(amount() > 0){
+		<option>Salary</option>
+		<option>Freelance</option>
+		<option>Investments</option>
+		<option>Business Income</option>
+		<option>Gifts & Donations</option>
+		<option>Refunds</option>
+		<option>Rental Income</option>
+		<option>Side Hustle</option>
+		}
+		@else if (amount() < 0) {
+		<option>Groceries</option>
+		<option>Dining Out</option>
+		<option>Transport</option>
+		<option>Entertainment</option>
+		<option>Health & Fitness</option>
+		<option>Subscriptions</option>
+		<option>Shopping</option>
+		<option>Utilities</option>
+		<option>Education</option>
+		<option>Travel</option>
+		<option>Insurance</option>
+		<option>Debt Payments</option>
+		}
+		
+	</select>
+
+	<button class="join-item btn btn-wide btn-outline w-80 mt-5" (click)="createTransaction()">Create transaction</button>
+	<button class="join-item btn btn-wide btn-outline w-24" routerLink="/dashboard">Cancel</button>
+</div>

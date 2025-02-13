@@ -1,9 +1,10 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { TransactionsService } from '../../services/transactions.service';
 import { Transaction } from '../../../model/transaction.type';
 import { Chart, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, ArcElement, LineController } from 'chart.js';
 import { HeaderComponent } from '../header/header.component';
+import { UserService } from '../../services/user.service';
 
 Chart.register(
 	CategoryScale,
@@ -24,10 +25,14 @@ Chart.register(
 })
 export class DashboardComponent {
 	transactionsService = inject(TransactionsService)
+	userService = inject(UserService)
 
 	transactions = signal<Transaction[]>([]);
 
-	totalBalance = computed(() => this.transactions().reduce((sum, transaction) => sum + transaction.amount, 0))
+	totalBalance = computed(() => {
+		const value =this.transactions().reduce((sum, transaction) => sum + transaction.amount, 0);
+		return value;
+	})
 
 	ngOnInit() {
 		this.transactionsService.getAllTransactions().subscribe({
@@ -125,5 +130,9 @@ export class DashboardComponent {
 			complete: () => console.info('Completed fetching transactions')
 		});
 	}
-
+	constructor() {
+		effect(() => {
+		  this.userService.currentBalance.set(this.totalBalance());
+		});
+	  }
 }

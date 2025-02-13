@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { User } from '../../model/user.type';
 import { LoginReqest } from '../../model/loginReqest.type';
 import { Router } from '@angular/router';
@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 })
 export class UserService {
 	constructor(private http: HttpClient, private router: Router) { }
+
+	currentBalance = signal<number>(0);
+	
 	registerUser(user: User): void {
 		console.log(user)
 		this.http.post('http://localhost:8080/auth/register', user, { responseType: 'text' })
